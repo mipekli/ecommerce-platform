@@ -5,9 +5,20 @@ using Microsoft.IdentityModel.Tokens;
 using Product.API.Data;
 using Product.API.Interfaces;
 using Product.API.Repositories;
+using BuildingBlocks.Shared;
 using BuildingBlocks.Shared.Caching;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", builder.Environment.ApplicationName)
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -41,6 +52,8 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddCacheService(builder.Configuration);
+
+builder.Services.AddEcommerceTelemetry(builder.Configuration, "Product.API");
 
 builder.Services.AddCors(options =>
 {

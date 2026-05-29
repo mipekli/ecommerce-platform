@@ -1,14 +1,25 @@
 using System.Text;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Inventory.API.Data;
 using Inventory.API.Interfaces;
 using Inventory.API.Repositories;
-using Inventory.API.BackgroundServices;
-using BuildingBlocks.Shared.Messaging;
+using Inventory.API.Consumers;
+using BuildingBlocks.Shared;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", builder.Environment.ApplicationName)
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -39,8 +50,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
-builder.Services.AddEventBus(builder.Configuration);
-builder.Services.AddHostedService<OrderCreatedConsumerService>();
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.AddConsumers(typeof(ReserveStockConsumer).Assembly);
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var config = builder.Configuration.GetSection("EventBus");
+        cfg.Host(config.GetValue<string>("HostName") ?? "localhost", h =>
+        {
+            h.Username(config.GetValue<string>("UserName") ?? "guest");
+            h.Password(config.GetValue<string>("Password") ?? "guest");
+        });
+
+        cfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(5)));
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+builder.Services.AddEcommerceTelemetry(builder.Configuration, "Inventory.API");
 
 builder.Services.AddCors(options =>
 {

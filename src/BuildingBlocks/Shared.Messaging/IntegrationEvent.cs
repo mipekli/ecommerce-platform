@@ -6,8 +6,3 @@ public abstract record IntegrationEvent
     public DateTime OccurredOn { get; init; } = DateTime.UtcNow;
     public string EventType => GetType().Name;
 }
-
-public interface IIntegrationEventHandler<in T> where T : IntegrationEvent
-{
-    Task HandleAsync(T @event, CancellationToken cancellationToken = default);
-}

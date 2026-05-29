@@ -1,7 +1,9 @@
+using MassTransit;
 using MediatR;
 using Order.API.Interfaces;
 using Order.API.ValueObjects;
 using Order.API.DTOs;
+using Order.API.IntegrationEvents;
 using OrderEntity = Order.API.Entities.Order;
 
 namespace Order.API.Commands;
@@ -9,10 +11,12 @@ namespace Order.API.Commands;
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, OrderDto>
 {
     private readonly IOrderRepository _orderRepository;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public CreateOrderCommandHandler(IOrderRepository orderRepository)
+    public CreateOrderCommandHandler(IOrderRepository orderRepository, IPublishEndpoint publishEndpoint)
     {
         _orderRepository = orderRepository;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<OrderDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -44,6 +48,22 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
         }
 
         await _orderRepository.AddAsync(order, cancellationToken);
+
+        await _publishEndpoint.Publish(new OrderCreatedIntegrationEvent
+        {
+            OrderId = order.Id,
+            UserId = order.UserId,
+            OrderNumber = order.OrderNumber,
+            TotalAmount = order.TotalAmount,
+            CreatedAt = order.CreatedAt,
+            Items = order.Items.Select(i => new OrderItemEvent
+            {
+                ProductId = i.ProductId,
+                ProductName = i.ProductName,
+                UnitPrice = i.UnitPrice,
+                Quantity = i.Quantity
+            }).ToList()
+        }, cancellationToken);
 
         return MapToDto(order);
     }

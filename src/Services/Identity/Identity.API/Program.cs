@@ -7,8 +7,19 @@ using Identity.API.Data;
 using Identity.API.Interfaces;
 using Identity.API.Repositories;
 using Identity.API.Services;
+using BuildingBlocks.Shared;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", builder.Environment.ApplicationName)
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -41,6 +52,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+builder.Services.AddEcommerceTelemetry(builder.Configuration, "Identity.API");
 
 builder.Services.AddCors(options =>
 {

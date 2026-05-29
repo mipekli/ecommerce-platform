@@ -1,12 +1,26 @@
 using System.Text;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Order.API.Data;
 using Order.API.Interfaces;
 using Order.API.Repositories;
+using Order.API.Sagas;
+using Order.API.Consumers;
+using BuildingBlocks.Shared;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", builder.Environment.ApplicationName)
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -38,6 +52,32 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.AddSagaStateMachine<OrderSagaStateMachine, OrderSagaState>()
+        .InMemoryRepository();
+
+    x.AddConsumers(typeof(CancelOrderConsumer).Assembly);
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var config = builder.Configuration.GetSection("EventBus");
+        cfg.Host(config.GetValue<string>("HostName") ?? "localhost", h =>
+        {
+            h.Username(config.GetValue<string>("UserName") ?? "guest");
+            h.Password(config.GetValue<string>("Password") ?? "guest");
+        });
+
+        cfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(5)));
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+builder.Services.AddEcommerceTelemetry(builder.Configuration, "Order.API");
 
 builder.Services.AddCors(options =>
 {
