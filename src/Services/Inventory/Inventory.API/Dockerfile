@@ -3,9 +3,6 @@ WORKDIR /src
 COPY src/Directory.Build.props .
 COPY src/BuildingBlocks/Shared/Shared.csproj BuildingBlocks/Shared/
 COPY src/BuildingBlocks/Shared.Messaging/Shared.Messaging.csproj BuildingBlocks/Shared.Messaging/
-COPY src/Services/Inventory/Inventory.Domain/Inventory.Domain.csproj Services/Inventory/Inventory.Domain/
-COPY src/Services/Inventory/Inventory.Application/Inventory.Application.csproj Services/Inventory/Inventory.Application/
-COPY src/Services/Inventory/Inventory.Infrastructure/Inventory.Infrastructure.csproj Services/Inventory/Inventory.Infrastructure/
 COPY src/Services/Inventory/Inventory.API/Inventory.API.csproj Services/Inventory/Inventory.API/
 RUN dotnet restore Services/Inventory/Inventory.API/Inventory.API.csproj
 

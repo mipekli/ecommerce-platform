@@ -1,6 +1,6 @@
-using Notification.Infrastructure.Services;
-using BuildingBlocks.Shared.Messaging;
+using Notification.API.Services;
 using Notification.API.BackgroundServices;
+using BuildingBlocks.Shared.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 

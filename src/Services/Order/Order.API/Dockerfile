@@ -3,9 +3,6 @@ WORKDIR /src
 COPY src/Directory.Build.props .
 COPY src/BuildingBlocks/Shared/Shared.csproj BuildingBlocks/Shared/
 COPY src/BuildingBlocks/Shared.Messaging/Shared.Messaging.csproj BuildingBlocks/Shared.Messaging/
-COPY src/Services/Order/Order.Domain/Order.Domain.csproj Services/Order/Order.Domain/
-COPY src/Services/Order/Order.Application/Order.Application.csproj Services/Order/Order.Application/
-COPY src/Services/Order/Order.Infrastructure/Order.Infrastructure.csproj Services/Order/Order.Infrastructure/
 COPY src/Services/Order/Order.API/Order.API.csproj Services/Order/Order.API/
 RUN dotnet restore Services/Order/Order.API/Order.API.csproj
 

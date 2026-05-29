@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Product.Domain.Interfaces;
-using Product.Application.DTOs;
+using Product.API.Interfaces;
+using Product.API.DTOs;
 using BuildingBlocks.Shared.Caching;
 
 namespace Product.API.Controllers;

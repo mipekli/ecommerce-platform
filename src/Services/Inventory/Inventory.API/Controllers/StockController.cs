@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Inventory.Domain.Interfaces;
-using Inventory.Domain.Entities;
+using Inventory.API.Interfaces;
+using Inventory.API.Entities;
 
 namespace Inventory.API.Controllers;
 

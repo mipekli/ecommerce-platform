@@ -1,5 +1,5 @@
 using BuildingBlocks.Shared.Messaging;
-using Notification.Infrastructure.Services;
+using Notification.API.Services;
 
 namespace Notification.API.BackgroundServices;
 

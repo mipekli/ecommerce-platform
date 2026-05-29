@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <RootNamespace>Product.Application</RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Product.Domain\Product.Domain.csproj" />
-    <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Caching\Shared.Caching.csproj" />
-  </ItemGroup>
-</Project>

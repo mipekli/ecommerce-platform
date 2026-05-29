@@ -1,7 +1,10 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Product.Infrastructure;
+using Product.API.Data;
+using Product.API.Interfaces;
+using Product.API.Repositories;
 using BuildingBlocks.Shared.Caching;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<ProductDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("ProductDb"),
+        b => b.MigrationsAssembly(typeof(ProductDbContext).Assembly.FullName)));
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -29,7 +40,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-builder.Services.AddProductInfrastructure(builder.Configuration);
 builder.Services.AddCacheService(builder.Configuration);
 
 builder.Services.AddCors(options =>

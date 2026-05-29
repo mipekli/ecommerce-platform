@@ -1,9 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Product.Application.Commands;
-using Product.Application.DTOs;
-using Product.Application.Queries;
+using Product.API.Commands;
+using Product.API.DTOs;
+using Product.API.Queries;
 using BuildingBlocks.Shared.Caching;
 
 namespace Product.API.Controllers;

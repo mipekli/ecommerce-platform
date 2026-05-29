@@ -1,15 +1,25 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Inventory.Infrastructure;
-using BuildingBlocks.Shared.Messaging;
+using Inventory.API.Data;
+using Inventory.API.Interfaces;
+using Inventory.API.Repositories;
 using Inventory.API.BackgroundServices;
+using BuildingBlocks.Shared.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<InventoryDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("InventoryDb"),
+        b => b.MigrationsAssembly(typeof(InventoryDbContext).Assembly.FullName)));
+
+builder.Services.AddScoped<IStockItemRepository, StockItemRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -29,7 +39,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
-builder.Services.AddInventoryInfrastructure(builder.Configuration);
 builder.Services.AddEventBus(builder.Configuration);
 builder.Services.AddHostedService<OrderCreatedConsumerService>();
 

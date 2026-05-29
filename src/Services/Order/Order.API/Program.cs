@@ -1,13 +1,23 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Order.Infrastructure;
+using Order.API.Data;
+using Order.API.Interfaces;
+using Order.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<OrderDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("OrderDb"),
+        b => b.MigrationsAssembly(typeof(OrderDbContext).Assembly.FullName)));
+
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -28,7 +38,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-builder.Services.AddOrderInfrastructure(builder.Configuration);
 
 builder.Services.AddCors(options =>
 {

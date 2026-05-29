@@ -2,9 +2,9 @@ using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Order.Application.Commands;
-using Order.Application.DTOs;
-using Order.Application.Queries;
+using Order.API.Commands;
+using Order.API.DTOs;
+using Order.API.Queries;
 
 namespace Order.API.Controllers;
 

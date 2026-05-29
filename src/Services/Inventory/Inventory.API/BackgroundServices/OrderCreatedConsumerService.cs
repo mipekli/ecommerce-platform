@@ -1,5 +1,5 @@
 using BuildingBlocks.Shared.Messaging;
-using Inventory.Application.IntegrationEvents.OrderCreated;
+using Inventory.API.IntegrationEvents.OrderCreated;
 
 namespace Inventory.API.BackgroundServices;
 
@@ -24,7 +24,7 @@ public class OrderCreatedConsumerService : BackgroundService
         _logger.LogInformation("OrderCreated consumer service starting...");
 
         var handler = new OrderCreatedEventHandler(
-            _serviceProvider.GetRequiredService<Inventory.Domain.Interfaces.IStockItemRepository>());
+            _serviceProvider.GetRequiredService<Inventory.API.Interfaces.IStockItemRepository>());
 
         _eventBus.RegisterHandler(handler);
         await _eventBus.SubscribeAsync<OrderCreatedEvent, OrderCreatedEventHandler>();

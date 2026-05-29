@@ -1,10 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Identity.Application.Commands.Register;
-using Identity.Application.Commands.Login;
-using Identity.Application.Queries.GetProfile;
-using Identity.Application.DTOs;
+using Identity.API.Commands.Register;
+using Identity.API.Commands.Login;
+using Identity.API.Queries.GetProfile;
+using Identity.API.DTOs;
 using System.Security.Claims;
 
 namespace Identity.API.Controllers;
