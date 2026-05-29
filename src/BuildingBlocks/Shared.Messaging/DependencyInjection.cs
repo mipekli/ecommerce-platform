@@ -18,7 +18,6 @@ public static class MessagingDependencyInjection
                 UserName = config.GetValue<string>("UserName") ?? "guest",
                 Password = config.GetValue<string>("Password") ?? "guest",
                 VirtualHost = config.GetValue<string>("VirtualHost") ?? "/",
-                DispatchConsumersAsync = true
             };
         });
 

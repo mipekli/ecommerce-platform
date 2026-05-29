@@ -5,13 +5,13 @@ namespace Inventory.Domain.Entities;
 public class StockItem : BaseEntity
 {
     public Guid ProductId { get; private set; }
-    public string ProductName { get; private set; }
-    public string SKU { get; private set; }
+    public string ProductName { get; private set; } = null!;
+    public string SKU { get; private set; } = null!;
     public int QuantityOnHand { get; private set; }
     public int ReservedQuantity { get; private set; }
     public int AvailableQuantity => QuantityOnHand - ReservedQuantity;
     public int LowStockThreshold { get; private set; } = 10;
-    public string WarehouseLocation { get; private set; }
+    public string WarehouseLocation { get; private set; } = null!;
 
     private StockItem() { }
 

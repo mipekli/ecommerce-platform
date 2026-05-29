@@ -1,8 +1,8 @@
 using MediatR;
-using Order.Domain.Entities;
 using Order.Domain.Interfaces;
 using Order.Domain.ValueObjects;
 using Order.Application.DTOs;
+using OrderEntity = Order.Domain.Entities.Order;
 
 namespace Order.Application.Commands;
 
@@ -31,7 +31,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
             request.BillingAddress.ZipCode,
             request.BillingAddress.Country);
 
-        var order = new Order(request.UserId, shippingAddress, billingAddress);
+        var order = new OrderEntity(request.UserId, shippingAddress, billingAddress);
 
         foreach (var item in request.Items)
         {
@@ -48,7 +48,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
         return MapToDto(order);
     }
 
-    private static OrderDto MapToDto(Order order)
+    private static OrderDto MapToDto(OrderEntity order)
     {
         return new OrderDto
         {

@@ -4,8 +4,8 @@ namespace Product.Domain.Entities;
 
 public class Category : BaseEntity
 {
-    public string Name { get; private set; }
-    public string Description { get; private set; }
+    public string Name { get; private set; } = null!;
+    public string Description { get; private set; } = null!;
     public string? ImageUrl { get; private set; }
     public Guid? ParentCategoryId { get; private set; }
     public Category? ParentCategory { get; private set; }

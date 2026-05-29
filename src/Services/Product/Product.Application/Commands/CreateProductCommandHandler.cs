@@ -1,7 +1,7 @@
 using MediatR;
-using Product.Domain.Entities;
 using Product.Domain.Interfaces;
 using Product.Application.DTOs;
+using ProductDomain = Product.Domain.Entities;
 
 namespace Product.Application.Commands;
 
@@ -26,7 +26,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         if (existingProduct)
             throw new InvalidOperationException("Bu SKU ile kayıtlı bir ürün zaten var.");
 
-        var product = new Product(request.Name, request.Description, request.Price, request.ImageUrl, request.CategoryId, request.SKU);
+        var product = new ProductDomain.Product(request.Name, request.Description, request.Price, request.ImageUrl, request.CategoryId, request.SKU);
         await _productRepository.AddAsync(product, cancellationToken);
 
         return new ProductDto

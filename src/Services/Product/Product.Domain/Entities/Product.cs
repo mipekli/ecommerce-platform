@@ -4,14 +4,14 @@ namespace Product.Domain.Entities;
 
 public class Product : BaseEntity
 {
-    public string Name { get; private set; }
-    public string Description { get; private set; }
+    public string Name { get; private set; } = null!;
+    public string Description { get; private set; } = null!;
     public decimal Price { get; private set; }
     public string Currency { get; private set; } = "TRY";
-    public string ImageUrl { get; private set; }
+    public string ImageUrl { get; private set; } = null!;
     public Guid CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
-    public string SKU { get; private set; }
+    public string SKU { get; private set; } = null!;
     public bool IsPublished { get; private set; }
 
     private Product() { }

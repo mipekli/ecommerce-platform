@@ -1,13 +1,13 @@
-using Order.Domain.Entities;
-
 namespace Order.Domain.Interfaces;
+
+using Entities;
 
 public interface IOrderRepository
 {
-    Task<Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<IEnumerable<Order>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
-    Task<IEnumerable<Order>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task AddAsync(Order order, CancellationToken cancellationToken = default);
-    Task UpdateAsync(Order order, CancellationToken cancellationToken = default);
-    Task DeleteAsync(Order order, CancellationToken cancellationToken = default);
+    Task<Entities.Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Entities.Order>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Entities.Order>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task AddAsync(Entities.Order order, CancellationToken cancellationToken = default);
+    Task UpdateAsync(Entities.Order order, CancellationToken cancellationToken = default);
+    Task DeleteAsync(Entities.Order order, CancellationToken cancellationToken = default);
 }

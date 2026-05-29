@@ -4,11 +4,11 @@ namespace Identity.Domain.Entities;
 
 public class User : BaseEntity
 {
-    public string Email { get; private set; }
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
-    public string PasswordHash { get; private set; }
-    public string Role { get; private set; }
+    public string Email { get; private set; } = null!;
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
+    public string PasswordHash { get; private set; } = null!;
+    public string Role { get; private set; } = null!;
     public bool IsActive { get; private set; } = true;
     public string? RefreshToken { get; private set; }
     public DateTime? RefreshTokenExpiry { get; private set; }

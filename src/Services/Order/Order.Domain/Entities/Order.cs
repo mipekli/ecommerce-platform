@@ -16,7 +16,7 @@ public enum OrderStatus
 public class Order : BaseEntity
 {
     public Guid UserId { get; private set; }
-    public string OrderNumber { get; private set; }
+    public string OrderNumber { get; private set; } = null!;
     public OrderStatus Status { get; private set; } = OrderStatus.Pending;
     public Address ShippingAddress { get; private set; } = null!;
     public Address BillingAddress { get; private set; } = null!;

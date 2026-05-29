@@ -108,7 +108,7 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.ReceivedAsync += async (model, ea) =>
             {
-                var eventNameReceived = ea.BasicProperties.Type;
+                var eventNameReceived = ea.BasicProperties.Type ?? string.Empty;
                 var body = ea.Body.ToArray();
 
                 if (_eventTypes.TryGetValue(eventNameReceived, out var eventType))
